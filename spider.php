@@ -84,7 +84,7 @@ class very_simple_swoole_spider {
             $this->config['cookie'] = file_get_contents($this->config['cookie_file'][$k]);
             $this->config['cookie_id'] = $_GET['cookie_id'];
         } else {
-            die("cookie id not exists:" . $_GET['cookie_id']."\n");
+            die("cookie id not exists:" . $_GET['cookie_id'] . "\n");
         }
     }
 
@@ -99,9 +99,26 @@ class very_simple_swoole_spider {
         }
     }
 
-    public function get_html() {
-        $url = $this->config['url'][1];
-        $content = '';
+    public function gogogo() {
+        $url = $this->config['url'][0];
+
+        $html = $this->get_html($this->config['url'][0]); //取得首页, 取得原始referer和刷新cookie
+        
+        if(!FALSE == $html) {
+            $this->do_interval();
+            $this->get_html($url);
+            
+        }
+    }
+
+    public function get_html($url) {
+        $url = $this->config['url'][0];
+
+        $html = $this->do_get($url);
+
+
+        if ($this->config['next_page_type'])
+            $content = '';
     }
 
     public function do_get($url, $data, $pid = 0) {
@@ -112,7 +129,7 @@ class very_simple_swoole_spider {
         }
 
         //设置选项，包括URL
-        curl_setopt($ch, CURLOPT_URL, "http://www.nettuts.com");
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_USERAGENT, $this->user_agent);
@@ -126,6 +143,17 @@ class very_simple_swoole_spider {
 
     public function do_post($url, $data) {
         
+    }
+    
+    private function do_interval() {
+        if($this->config['interval'] > 0) {
+            if($this->config['interval_random'] > 0) {
+                $sleep_time = $this->config['interval']+ $this->config['interval'] * rand(0, $this->config['interval_random']);
+            }else {
+                $sleep_time = $this->config['interval'];
+            }
+        }
+        sleep($sleep_time);
     }
 
 }

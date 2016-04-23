@@ -1,7 +1,7 @@
 <?php
 
 $conf['interval'] = '0.1'; // 两次抓取间隔时间， 单位为秒
-$conf['interval_random'] = 1; // 两次抓取间隔， 是否加入随机， 随机大小为  $conf['interval']* rand(0,$conf['interval_random']);  0的时候为不加入
+$conf['interval_random'] = 1; // 两次抓取间隔， 是否加入随机， 随机大小为 $conf['interval']+ $conf['interval']* rand(0,$conf['interval_random']);  0的时候为不加入
 $conf['work_num'] = '2'; // 几线程同时抓取， 建议不要太大， 否则小站容易被爬死
 
 $conf['proxy'] = 'off'; // 是否使用代理， 没做
